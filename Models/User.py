@@ -3,11 +3,12 @@ import requests
 import re
 
 
-class QueryBuilder:
-    def __init__(self):
+class User:
+    def __init__(self, vk_url: str):
         self.access_token = ACCESS_TOKEN
+        self.id = self._get_id(vk_url)
 
-    def get_user_id(self, vk_url) -> int:
+    def _get_id(self, vk_url) -> int:
         user_id = re.search(r'vk.com/(?:id|)(\d+)', vk_url)
         if user_id:
             user_id = user_id.group(1)
@@ -34,10 +35,9 @@ class QueryBuilder:
                 print('Ошибка при получении ID пользователя:', data)
                 return None
 
-
-    def get_user_info(self, vk_url):
+    def get_user_info(self):
         # Извлекаем ID пользователя из ссылки
-        user_id = self.get_user_id(vk_url)
+        user_id = self.id
 
         # Запрос к API ВКонтакте
         api_url = 'https://api.vk.com/method/users.get'
@@ -56,8 +56,8 @@ class QueryBuilder:
         else:
             print('Ошибка при получении данных:', data)
 
-    def get_user_friends(self, vk_url):
-        user_id = self.get_user_id(vk_url)
+    def get_user_friends(self):
+        user_id = self.id
 
         if user_id is None:
             return

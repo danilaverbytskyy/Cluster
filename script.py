@@ -1,7 +1,7 @@
-from Models.QueryBuilder import QueryBuilder
+from Models.User import User
 
 
 vk_url = input("Введите ссылку на страницу ВКонтакте: \n")
-query_builder = QueryBuilder()
-friends = query_builder.get_user_friends(vk_url)
+user = User(vk_url)
+friends = user.get_user_friends()
 print(friends)
