@@ -62,7 +62,7 @@ class QueryBuilder:
         if user_id is None:
             return
 
-        api_url = 'https://api.vk.com/method/friends.get'
+        api_url = 'https://api.vk.com/method/friends.getLists'
         params = {
             'user_id': user_id,
             'access_token': self.access_token,
