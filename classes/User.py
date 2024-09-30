@@ -5,8 +5,8 @@ import re
 
 class User:
     def __init__(self, vk_url: str):
-        self.access_token = ACCESS_TOKEN
-        self.id = self._get_id(vk_url)
+        self._access_token = ACCESS_TOKEN
+        self._id = self._get_id(vk_url)
 
     def _get_id(self, vk_url) -> int:
         user_id = re.search(r'vk.com/(?:id|)(\d+)', vk_url)
@@ -22,7 +22,7 @@ class User:
             api_url = 'https://api.vk.com/method/users.get'
             params = {
                 'user_ids': username,
-                'access_token': self.access_token,
+                'access_token': self._access_token,
                 'v': '5.131'  # Версия API
             }
 
@@ -35,15 +35,15 @@ class User:
                 print('Ошибка при получении ID пользователя:', data)
                 return None
 
-    def get_user_info(self):
+    def get_info(self):
         # Извлекаем ID пользователя из ссылки
-        user_id = self.id
+        user_id = self._id
 
         # Запрос к API ВКонтакте
         api_url = 'https://api.vk.com/method/users.get'
         params = {
             'user_ids': user_id,
-            'access_token': self.access_token,
+            'access_token': self._access_token,
             'v': '5.131'
         }
 
@@ -51,21 +51,20 @@ class User:
         data = response.json()
 
         if 'response' in data:
-            with open('data.txt', 'a') as file:
-                file.write('\n' + str(data['response'][0]))
+            return data['response'][0]
         else:
             print('Ошибка при получении данных:', data)
 
-    def get_user_friends(self):
-        user_id = self.id
+    def get_friends(self):
+        user_id = self._id
 
         if user_id is None:
             return
 
-        api_url = 'https://api.vk.com/method/friends.getLists'
+        api_url = 'https://api.vk.com/method/friends.get'
         params = {
             'user_id': user_id,
-            'access_token': self.access_token,
+            'access_token': self._access_token,
             'v': '5.131'
         }
 
@@ -77,3 +76,26 @@ class User:
             return friends
         else:
             print('Ошибка при получении данных:', data)
+
+    def get_groups(self):
+        user_id = self._id
+
+        if user_id is None:
+            return
+
+        api_url = 'https://api.vk.com/method/groups.get'
+        params = {
+            'user_id': user_id,
+            'access_token': self._access_token,
+            'v': '5.131'
+        }
+
+        response = requests.get(api_url, params=params)
+        data = response.json()
+
+        if 'response' in data:
+            groups = data['response']['items']  # Получаем список идентификаторов групп
+            return groups
+        else:
+            print('Ошибка при получении данных:', data)
+

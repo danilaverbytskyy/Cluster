@@ -1,6 +1,0 @@
-{'id': 168066726, 'first_name': 'Oleg', 'last_name': 'Rozenberg', 'can_access_closed': True, 'is_closed': False}
-{'id': 168066726, 'first_name': 'Oleg', 'last_name': 'Rozenberg', 'can_access_closed': True, 'is_closed': False}
-{'id': 168066726, 'first_name': 'Oleg', 'last_name': 'Rozenberg', 'can_access_closed': True, 'is_closed': False}
-{'id': 168066726, 'first_name': 'Oleg', 'last_name': 'Rozenberg', 'can_access_closed': True, 'is_closed': False}
-{'id': 168066726, 'first_name': 'Oleg', 'last_name': 'Rozenberg', 'can_access_closed': True, 'is_closed': False}
-{'id': 363570261, 'first_name': 'Emilia', 'last_name': 'Postushnaya', 'can_access_closed': True, 'is_closed': False}
