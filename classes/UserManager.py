@@ -3,12 +3,11 @@ import requests
 import re
 
 
-class User:
-    def __init__(self, vk_url: str):
+class UserManager:
+    def __init__(self):
         self._access_token = ACCESS_TOKEN
-        self._id = self._get_id(vk_url)
 
-    def _get_id(self, vk_url) -> int:
+    def get_id(self, vk_url) -> int:
         user_id = re.search(r'vk.com/(?:id|)(\d+)', vk_url)
         if user_id:
             user_id = user_id.group(1)
@@ -35,9 +34,9 @@ class User:
                 print('Ошибка при получении ID пользователя:', data)
                 return None
 
-    def get_info(self):
+    def get_info_one(self, vk_url: str):
         # Извлекаем ID пользователя из ссылки
-        user_id = self._id
+        user_id = self.get_id(vk_url)
 
         # Запрос к API ВКонтакте
         api_url = 'https://api.vk.com/method/users.get'
@@ -51,12 +50,28 @@ class User:
         data = response.json()
 
         if 'response' in data:
-            return data['response'][0]
+            return data['response']
         else:
             print('Ошибка при получении данных:', data)
 
-    def get_friends(self):
-        user_id = self._id
+    def get_info_many(self, user_ids: list[str]):
+        api_url = 'https://api.vk.com/method/users.get'
+        params = {
+            'user_ids': ','.join(user_ids),
+            'access_token': self._access_token,
+            'v': '5.131'
+        }
+
+        response = requests.get(api_url, params=params)
+        data = response.json()
+
+        if 'response' in data:
+            return data['response']
+        else:
+            print('Ошибка при получении данных:', data)
+
+    def get_friends(self, vk_url: str):
+        user_id = self.get_id(vk_url)
 
         if user_id is None:
             return
@@ -77,30 +92,8 @@ class User:
         else:
             print('Ошибка при получении данных:', data)
 
-    def get_groups(self):
-        user_id = self._id
-
-        if user_id is None:
-            return
-
-        api_url = 'https://api.vk.com/method/groups.get'
-        params = {
-            'user_id': user_id,
-            'access_token': self._access_token,
-            'v': '5.131'
-        }
-
-        response = requests.get(api_url, params=params)
-        data = response.json()
-
-        if 'response' in data:
-            groups = data['response']['items']  # Получаем список идентификаторов групп
-            return groups
-        else:
-            print('Ошибка при получении данных:', data)
-
-    def get_subscriptions(self):
-        user_id = self._id
+    def get_subscriptions(self, vk_url: str):
+        user_id = self.get_id(vk_url)
 
         if user_id is None:
             return
@@ -120,4 +113,3 @@ class User:
             return subscriptions
         else:
             print('Ошибка при получении данных:', data)
-
