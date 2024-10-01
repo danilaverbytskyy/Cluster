@@ -99,3 +99,25 @@ class User:
         else:
             print('Ошибка при получении данных:', data)
 
+    def get_subscriptions(self):
+        user_id = self._id
+
+        if user_id is None:
+            return
+
+        api_url = 'https://api.vk.com/method/users.getSubscriptions'
+        params = {
+            'user_id': user_id,
+            'access_token': self._access_token,
+            'v': '5.131'
+        }
+
+        response = requests.get(api_url, params=params)
+        data = response.json()
+
+        if 'response' in data:
+            subscriptions = data['response']  # Получаем список идентификаторов подписок
+            return subscriptions
+        else:
+            print('Ошибка при получении данных:', data)
+
