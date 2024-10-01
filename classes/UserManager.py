@@ -3,11 +3,11 @@ import requests
 import re
 
 
-class UserManager:
+class UserManager(object):
     def __init__(self):
         self._access_token = ACCESS_TOKEN
 
-    def get_id(self, vk_url) -> int:
+    def get_id(self, vk_url: str) -> int:
         user_id = re.search(r'vk.com/(?:id|)(\d+)', vk_url)
         if user_id:
             user_id = user_id.group(1)
@@ -34,31 +34,11 @@ class UserManager:
                 print('Ошибка при получении ID пользователя:', data)
                 return None
 
-    def get_info_one(self, vk_url: str):
-        # Извлекаем ID пользователя из ссылки
-        user_id = self.get_id(vk_url)
-
-        # Запрос к API ВКонтакте
-        api_url = 'https://api.vk.com/method/users.get'
-        params = {
-            'user_ids': user_id,
-            'access_token': self._access_token,
-            'v': '5.131'
-        }
-
-        response = requests.get(api_url, params=params)
-        data = response.json()
-
-        if 'response' in data:
-            return data['response']
-        else:
-            print('Ошибка при получении данных:', data)
-
-    def get_info_many(self, user_ids: list[str]):
+    def get_info(self, user_ids: list[str]) -> list[dict]:
         api_url = 'https://api.vk.com/method/users.get'
         params = {
             'user_ids': ','.join(user_ids),
-            'fields': 'sex, about',
+            'fields': 'sex',
             'access_token': self._access_token,
             'v': '5.131',
         }
@@ -71,7 +51,8 @@ class UserManager:
         else:
             print('Ошибка при получении данных:', data)
 
-    def get_friends(self, vk_url: str):
+    def get_friends(self, vk_url: str) -> dict:
+        """Возвращает словарь с ключами count->int items->list"""
         user_id = self.get_id(vk_url)
 
         if user_id is None:

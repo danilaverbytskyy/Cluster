@@ -3,7 +3,7 @@ import requests
 import re
 
 
-class GroupManager:
+class GroupManager(object):
     def __init__(self):
         self._access_token = ACCESS_TOKEN
 
