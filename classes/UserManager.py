@@ -58,8 +58,9 @@ class UserManager:
         api_url = 'https://api.vk.com/method/users.get'
         params = {
             'user_ids': ','.join(user_ids),
+            'fields': 'sex, about',
             'access_token': self._access_token,
-            'v': '5.131'
+            'v': '5.131',
         }
 
         response = requests.get(api_url, params=params)
