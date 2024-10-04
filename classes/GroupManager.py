@@ -18,33 +18,12 @@ class GroupManager(object):
         group_name = vk_url.split('/')[-1]
         return self._fetch_group_id_by_name(group_name)
 
-    def get_info_one(self, group_id: int):
-        api_url = 'https://api.vk.com/method/groups.getById'
-        params = {
-            'group_id': group_id,
-            'access_token': self._access_token,
-            'v': '5.131'  # Версия API
-        }
-
-        try:
-            response = requests.get(api_url, params=params)
-            response.raise_for_status()  # Проверка на ошибки HTTP
-            data = response.json()
-
-            if 'response' in data and data['response']:
-                return data['response'][0]
-            else:
-                print('Ошибка при получении ID сообщества:', data)
-                return None
-        except requests.exceptions.RequestException as e:
-            print(f"Ошибка при запросе к API ВКонтакте: {e}")
-            return None
-
-    def get_info_many(self, group_ids: list[str]):
+    def get_info_by_ids(self, group_ids: list[str]):
         """Максимальное число идентификаторов — 500."""
         api_url = 'https://api.vk.com/method/groups.getById'
         params = {
             'group_ids': ','.join(group_ids),
+            'fields': 'members_count',
             'access_token': self._access_token,
             'v': '5.131'  # Версия API
         }
