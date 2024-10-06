@@ -1,1 +1,3 @@
-SELECT * from users WHERE sex=0
+SELECT g.*
+FROM groups g
+JOIN user_groups ug ON g.id = ug.group_id;
