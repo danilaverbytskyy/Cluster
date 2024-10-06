@@ -95,3 +95,11 @@ class UserManager(object):
             return subscriptions
         else:
             print('Ошибка при получении данных:', data)
+
+    def is_closed(self, user_id: int):
+        info = self.get_info([str(user_id)])
+        return info[0]['is_closed']
+
+    def is_private(self, user_id: int):
+        info = self.get_info([str(user_id)])
+        return 'is_private' in info[0].keys()
