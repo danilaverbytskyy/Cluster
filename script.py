@@ -25,7 +25,7 @@ group_manager = GroupManager()
 #         db_groups_info.append(group)
 #     db.add_all(db_groups_info)
 #     db.commit()
-
+#
 with Session(autoflush=False, bind=engine) as db:
     users_info = user_manager.get_info([str(i) for i in range(1500, 2000)])
     db_users_info = []
