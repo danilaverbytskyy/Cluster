@@ -18,7 +18,7 @@ class GroupManager(object):
         group_name = vk_url.split('/')[-1]
         return self._fetch_group_id_by_name(group_name)
 
-    def get_info_by_ids(self, group_ids: list[str]):
+    def get_info_by_ids(self, group_ids: list[str]) -> list[dict]:
         """Максимальное число идентификаторов — 500."""
         api_url = 'https://api.vk.com/method/groups.getById'
         params = {
