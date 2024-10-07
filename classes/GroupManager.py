@@ -63,3 +63,26 @@ class GroupManager(object):
         except requests.exceptions.RequestException as e:
             print(f"Ошибка при запросе к API ВКонтакте: {e}")
             return None
+
+    def is_member(self, group_id: int, user_id: int) -> bool:
+        api_url = 'https://api.vk.com/method/groups.isMember'
+        params = {
+            'group_id': group_id,
+            'user_id': user_id,
+            'access_token': self._access_token,
+            'v': '5.131'
+        }
+
+        try:
+            response = requests.get(api_url, params=params)
+            response.raise_for_status()  # Проверка на ошибки HTTP
+            data = response.json()
+
+            if 'response' in data and 'member' in data['response']:
+                return bool(data['response']['member'])
+            else:
+                print('Ошибка при проверке участия:', data)
+                return False
+        except requests.exceptions.RequestException as e:
+            print(f"Ошибка при запросе к API ВКонтакте: {e}")
+            return False
