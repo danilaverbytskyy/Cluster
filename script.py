@@ -21,14 +21,14 @@ for j in range(1, 7777777777, 500):
         if subscriptions is None:
             continue
         group_ids = subscriptions['groups']['items']
-        if group_ids is None:
-            continue
         user_group_pairs = [(user_id, group_id) for group_id in group_ids]   
         if user_group_pairs is None or len(user_group_pairs) == 0:
-             continue
+            continue
+        
         user_service.add_users([str(user_id)])
         group_service.add_groups([str(elem) for elem in group_ids[0:500]])
         user_group_service.add_user_groups(user_group_pairs)
+
         user_count += 1
         if user_count >= USER_COUNT_LIMIT:
             break
