@@ -19,5 +19,6 @@ class GroupService(DatabaseManager):
                     is_closed=bool(single_group_information['is_closed'])
                 ) for single_group_information in groups_info
             ]
-            db_session.add_all(db_groups_info)
-            db_session.commit()
+            if not(db_groups_info is None):
+                db_session.add_all(db_groups_info)
+                db_session.commit()

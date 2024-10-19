@@ -1,4 +1,6 @@
 .idea
+.vs
+__pycache__
 constants.py
 cluster.db
 sql

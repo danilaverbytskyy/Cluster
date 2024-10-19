@@ -16,7 +16,7 @@ class User(Base):
     last_name = Column(String, nullable=False)
     sex = Column(Integer, nullable=False)
     is_closed = Column(Boolean, nullable=False)
-    # bdate = Column(Date, nullable=True)
+    date_of_recording = Column(Date, nullable=False)
 
     groups = relationship("UserGroup", back_populates="user")
 
