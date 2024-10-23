@@ -8,13 +8,11 @@ class GroupManager(object):
         self._access_token = ACCESS_TOKEN
 
     def get_group_id(self, vk_url: str) -> int:
-        # Ищем ID сообщества в URL
         group_id_match = re.search(r'vk.com/(?:club|)(\d+)', vk_url)
 
         if group_id_match:
-            return int(group_id_match.group(1))  # Возвращаем ID как целое число
+            return int(group_id_match.group(1))
 
-        # Если это не ID, возможно, это сообщество по имени
         group_name = vk_url.split('/')[-1]
         return self._fetch_group_id_by_name(group_name)
 
@@ -75,7 +73,7 @@ class GroupManager(object):
 
         try:
             response = requests.get(api_url, params=params)
-            response.raise_for_status()  # Проверка на ошибки HTTP
+            response.raise_for_status()
             data = response.json()
 
             if 'response' in data and 'member' in data['response']:

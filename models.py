@@ -18,6 +18,19 @@ class User(Base):
     is_closed = Column(Boolean, nullable=False)
     date_of_recording = Column(Date, nullable=False)
 
+    # New attributes
+    bdate = Column(String, nullable=True)
+    city = Column(String, nullable=True)
+    country = Column(String, nullable=True)
+    home_town = Column(String, nullable=True)
+    photo_max_orig = Column(String, nullable=True)
+    status = Column(String, nullable=True)
+    last_seen = Column(Date, nullable=True)
+    followers_count = Column(Integer, nullable=True)
+    occupation = Column(String, nullable=True)
+    relation = Column(Integer, nullable=True)
+
+    # Define relationship
     groups = relationship("UserGroup", back_populates="user")
 
 

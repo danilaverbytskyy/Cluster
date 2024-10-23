@@ -38,7 +38,7 @@ class UserManager(object):
         api_url = 'https://api.vk.com/method/users.get'
         params = {
             'user_ids': ','.join(user_ids),
-            'fields': 'sex',
+            'fields': 'sex,bdate,city,country,home_town,has_photo,photo_max_orig,online,domain,has_mobile,contacts,site,education,universities,schools,status,last_seen,followers_count,occupation,nickname,relation,relatives,personal,connections,exports,activities,interests,music,movies,tv,books,games,about,quotes,timezone,career,military',
             'access_token': self._access_token,
             'v': '5.131',
         }
