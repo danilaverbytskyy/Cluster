@@ -1,44 +1,58 @@
 from datetime import datetime
 from database.DatabaseManager import DatabaseManager
 from classes.UserManager import UserManager
-from models import User
 
 
 class UserService(DatabaseManager):
-    def __init__(self, db_url: str, user_manager: UserManager):
-        super().__init__(db_url)
+    def __init__(self, user_manager: UserManager):
+        super().__init__()
         self.user_manager = user_manager
 
     def add_users(self, user_ids: list[str]) -> None:
-        with self.Session() as db_session:
+        """
+        Добавляет пользователей в базу данных.
+        Если пользователь уже существует (по user_vk_id), он не дублируется.
+        """
+        try:
             users_info = self.user_manager.get_info(user_ids)
-            for single_user_information in users_info:
-                db_user = User(
-                    vk_id=single_user_information['id'],
-                    first_name=single_user_information['first_name'],
-                    last_name=single_user_information['last_name'],
-                    sex=single_user_information['sex'],
-                    is_closed=single_user_information['is_closed'],
-                    date_of_recording=datetime.now(),
+            if not users_info:
+                print("❌ Не удалось получить данные пользователей.")
+                return
 
-                    # New attributes mapping
-                    bdate=single_user_information.get('bdate'),
-                    city=single_user_information.get('city', {}).get('title') if single_user_information.get(
-                        'city') else None,
-                    country=single_user_information.get('country', {}).get('title') if single_user_information.get(
-                        'country') else None,
-                    home_town=single_user_information.get('home_town'),
-                    photo_max_orig=single_user_information.get('photo_max_orig'),
-                    status=single_user_information.get('status'),
-                    last_seen=datetime.fromtimestamp(
-                        single_user_information['last_seen']['time']) if single_user_information.get(
-                        'last_seen') else None,
-                    followers_count=single_user_information.get('followers_count'),
-                    occupation=single_user_information.get('occupation', {}).get('name') if single_user_information.get(
-                        'occupation') else None,
-                    relation=single_user_information.get('relation')
+            insert_query = """
+            INSERT INTO users (
+                user_vk_id, first_name, last_name, sex, is_closed, birth_date, 
+                city, last_seen, followers_count, occupation, relation, date_of_recording, points
+            ) VALUES (
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW(), 0
+            ) ON CONFLICT (user_vk_id) DO NOTHING;
+            """
+
+            for user_data in users_info:
+                user_vk_id = user_data.get("id")
+                first_name = user_data.get("first_name")
+                last_name = user_data.get("last_name")
+                sex = user_data.get("sex")
+                is_closed = user_data.get("is_closed", False)
+                birth_date = user_data.get("bdate")
+                city = user_data.get("city", {}).get("title") if "city" in user_data else None
+                last_seen = (
+                    datetime.fromtimestamp(user_data["last_seen"]["time"]).date()
+                    if "last_seen" in user_data else None
                 )
+                followers_count = user_data.get("followers_count", 0)
+                occupation = user_data.get("occupation", {}).get("name") if "occupation" in user_data else None
+                relation = user_data.get("relation")
 
-                db_session.add(db_user)
+                # Выполняем вставку в БД
+                self.cursor.execute(insert_query, (
+                    user_vk_id, first_name, last_name, sex, is_closed, birth_date,
+                    city, last_seen, followers_count, occupation, relation
+                ))
 
-            db_session.commit()
+            self.connection.commit()
+            print("✅ Пользователи успешно добавлены в базу данных.")
+
+        except Exception as e:
+            self.connection.rollback()
+            print(f"❌ Ошибка при добавлении пользователей: {e}")
