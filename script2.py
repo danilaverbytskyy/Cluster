@@ -15,9 +15,9 @@ USER_COUNT_LIMIT = 10000
 # Инициализация менеджеров и сервисов
 user_manager = UserManager()
 group_manager = GroupManager()
-group_service = GroupService(db_url, group_manager)
-user_service = UserService(db_url, user_manager)
-user_group_service = UserGroupService(db_url)
+group_service = GroupService()
+user_service = UserService(db_url)
+user_group_service = UserGroupService()
 
 # Подключение к базе данных через psycopg2
 connection = psycopg2.connect(
