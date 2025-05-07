@@ -56,7 +56,7 @@ def load_city_data(limit=7):
 def cluster_cities(df):
     """Кластеризация городов по количеству пользователей"""
     if df.empty:
-        print("Нет данных для кластеризации")
+        print("Нет данных для группировки")
         return
 
     # Преобразуем названия городов в числовые признаки
@@ -83,9 +83,9 @@ def cluster_cities(df):
 
     for cluster in sorted(df['cluster'].unique()):
         cluster_data = top_cities[top_cities['cluster'] == cluster]
-        plt.bar(cluster_data['city'], cluster_data['users_count'], label=f'Cluster {cluster}')
+        plt.bar(cluster_data['city'], cluster_data['users_count'], label=f'Группа {cluster}')
 
-    plt.title('Кластеризация городов по количеству пользователей')
+    plt.title('Группировка городов по количеству пользователей')
     plt.xlabel('Город')
     plt.ylabel('Количество пользователей')
     plt.xticks(rotation=45, ha='right')
@@ -94,7 +94,7 @@ def cluster_cities(df):
     plt.show()
 
     # Выводим статистику
-    print("\nСтатистика по кластерам:")
+    print("\nСтатистика по группам:")
     print(df.groupby('cluster').agg({
         'city': 'count',
         'users_count': ['mean', 'sum']

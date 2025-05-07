@@ -71,7 +71,7 @@ def preprocess_data(df):
 def cluster_users(df):
     """Кластеризация пользователей"""
     if df.empty:
-        print("Нет данных для кластеризации")
+        print("Нет данных для группировки")
         return
 
     # Выбираем признаки для кластеризации
@@ -97,11 +97,11 @@ def cluster_users(df):
             cluster_data['days_since_last_seen'],
             cluster_data['followers_count'],
             c=color,
-            label=f'Cluster {cluster}',
+            label=f'Группа {cluster}',
             alpha=0.5
         )
 
-    plt.title('Кластеризация пользователей по подписчикам и активности')
+    plt.title('Группировка пользователей по подписчикам и активности')
     plt.xlabel('Дней с последнего визита')
     plt.ylabel('Количество подписчиков (логарифмическая шкала)')
     plt.yscale('log')
@@ -110,7 +110,7 @@ def cluster_users(df):
     plt.show()
 
     # Статистика по кластерам
-    print("\nСтатистика по кластерам:")
+    print("\nСтатистика по группам:")
     stats = df.groupby('cluster').agg({
         'followers_count': ['mean', 'median', 'count'],
         'days_since_last_seen': ['mean', 'median']
